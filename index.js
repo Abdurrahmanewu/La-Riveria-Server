@@ -3,7 +3,7 @@ const cors = require("cors");
 const app = express();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5005;
 
 // middle wares
 
@@ -25,6 +25,24 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+
+async function run() {
+  try {
+    const packageCollection = client.db("La-Riveria").collection("packages");
+
+    // Packages API
+
+    app.get("/packages", async (req, res) => {
+      const query = {};
+      const cursore = packageCollection.find(query);
+      const packges = await cursore.toArray();
+      res.send(packges);
+    });
+  } finally {
+  }
+}
+
+run().catch((e) => console.error(e));
 
 app.get("/", (req, res) => {
   res.send("La Riveria server is running");
