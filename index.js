@@ -28,29 +28,33 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const packageCollection = client.db("La-Riveria").collection("packages");
-    const packageCollectionOf3 = client
-      .db("La-Riveria")
-      .collection("semiPackages");
 
     // Packages API
 
     // full packges
 
     app.get("/packages", async (req, res) => {
-      const query = {};
-      const cursore = packageCollection.find(query);
-      const packges = await cursore.toArray();
-      res.send(packges);
+      const query = req.query.limit;
+      const queryInt = parseInt(query)
+      console.log(req);
+      if(query){
+        const result = await packageCollection.find().limit(queryInt).toArray()
+      res.send(result);
+      }
+
+      
+      const result = await packageCollection.find().toArray()
+      res.send(result);
     });
 
     //half packges
 
-    app.get("/packagesof3", async (req, res) => {
-      const query = {};
-      const cursore = packageCollectionOf3.find(query);
-      const halfpackages = await cursore.toArray();
-      res.send(halfpackages);
-    });
+    // app.get("/packagesof3", async (req, res) => {
+    //   const query = {};
+    //   const cursore = packageCollectionOf3.find(query);
+    //   const halfpackages = await cursore.toArray();
+    //   res.send(halfpackages);
+    // });
   } finally {
   }
 }
