@@ -15,7 +15,6 @@ app.use(express.json());
 // console.log(process.env.DB_PASSWORD);
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.jdfs3t2.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri);
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -29,14 +28,28 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const packageCollection = client.db("La-Riveria").collection("packages");
+    const packageCollectionOf3 = client
+      .db("La-Riveria")
+      .collection("semiPackages");
 
     // Packages API
+
+    // full packges
 
     app.get("/packages", async (req, res) => {
       const query = {};
       const cursore = packageCollection.find(query);
       const packges = await cursore.toArray();
       res.send(packges);
+    });
+
+    //half packges
+
+    app.get("/packagesof3", async (req, res) => {
+      const query = {};
+      const cursore = packageCollectionOf3.find(query);
+      const halfpackages = await cursore.toArray();
+      res.send(halfpackages);
     });
   } finally {
   }
