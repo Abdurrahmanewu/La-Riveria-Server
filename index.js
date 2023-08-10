@@ -35,26 +35,16 @@ async function run() {
 
     app.get("/packages", async (req, res) => {
       const query = req.query.limit;
-      const queryInt = parseInt(query)
-      console.log(req);
-      if(query){
-        const result = await packageCollection.find().limit(queryInt).toArray()
-      res.send(result);
+      const queryInt = parseInt(query);
+      if (query) {
+        const result = await packageCollection.find().limit(queryInt).toArray();
+        res.send(result);
+      } else {
+        const result = await packageCollection.find().toArray();
+        res.send(result);
       }
-
-      
-      const result = await packageCollection.find().toArray()
-      res.send(result);
     });
 
-    //half packges
-
-    // app.get("/packagesof3", async (req, res) => {
-    //   const query = {};
-    //   const cursore = packageCollectionOf3.find(query);
-    //   const halfpackages = await cursore.toArray();
-    //   res.send(halfpackages);
-    // });
   } finally {
   }
 }
