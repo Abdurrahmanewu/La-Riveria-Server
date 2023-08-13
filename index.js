@@ -28,10 +28,9 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const packageCollection = client.db("La-Riveria").collection("packages");
+    const reviewCollection = client.db("La-Riveria").collection("reviews");
 
     // Packages API
-
-    // full packges
 
     app.get("/packages", async (req, res) => {
       const query = req.query.limit;
@@ -49,6 +48,19 @@ async function run() {
       // console.log(id);
       const query = { _id: new ObjectId(id) };
       const result = await packageCollection.findOne(query);
+      res.send(result);
+    });
+
+    // Review API
+
+    app.get("/reviews", async (req, res) => {
+      const query = {};
+      const result = await reviewCollection.find(query).toArray();
+      res.send(result);
+    });
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
       res.send(result);
     });
   } finally {
