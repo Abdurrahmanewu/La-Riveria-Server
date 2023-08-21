@@ -62,10 +62,13 @@ async function run() {
       let query = {};
       if (req.query.email) {
         query = {
-          email: req.query.email,
+          guestEmail: req.query.email,
         };
       }
-      const reviews = await reviewCollection.find(query).toArray();
+      const reviews = await reviewCollection
+        .find(query)
+        .sort({ date: 1 })
+        .toArray();
       res.send(reviews);
     });
     app.post("/reviews", async (req, res) => {
@@ -90,6 +93,20 @@ async function run() {
       const result = await orderCollection.insertOne(order);
       res.send(result);
     });
+
+    app.patch("/orders/:id", async (req, res) => {
+      const id = req.params.id;
+      const status = req.body.status;
+      const query = { _id: new ObjectId(id) };
+      const udpdatedDoc = {
+        $set: {
+          status: status,
+        },
+      };
+      const result = await orderCollection.updateOne(query, udpdatedDoc);
+      res.send(result);
+    });
+
     app.delete("/orders/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
