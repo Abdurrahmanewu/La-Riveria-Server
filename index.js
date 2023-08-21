@@ -67,7 +67,7 @@ async function run() {
       }
       const reviews = await reviewCollection
         .find(query)
-        .sort({ date: 1 })
+        .sort({ date: -1 })
         .toArray();
       res.send(reviews);
     });
