@@ -76,6 +76,25 @@ async function run() {
       const reviews = await reviewCollection.insertOne(review);
       res.send(reviews);
     });
+    app.patch("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const message = req.body.message;
+      const query = { _id: new ObjectId(id) };
+      const udpdatedDoc = {
+        $set: {
+          message: message,
+        },
+      };
+      const result = await reviewCollection.updateOne(query, udpdatedDoc);
+      res.send(result);
+    });
+
+    app.delete("/reviews/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await reviewCollection.deleteOne(query);
+      res.send(result);
+    });
 
     // Orders API
     app.get("/orders", async (req, res) => {
